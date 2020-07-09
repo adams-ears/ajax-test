@@ -1,7 +1,9 @@
-function getData(cb) {
+const baseURL = "https://ci-swapi.herokuapp.com/api/"
+
+function getData(type, cb) {
   var xhr = new XMLHttpRequest();
 
-  xhr.open("GET", "https://ci-swapi.herokuapp.com/api/");
+  xhr.open("GET", baseURL + type) + "/";
   xhr.send();
 
   xhr.onreadystatechange = function () {
@@ -11,8 +13,28 @@ function getData(cb) {
   };
 }
 
-function printDatatoConsole(data){
-    console.log(data);
+function getTableHeaders(obj) {
+    var tableHeaders = [];
+
+    Object.keys(obj).forEach(function(key){
+         tableHeaders.push(`<td>${key}</td>`);
+    });
+
+    return `<td>${tableHeaders}</td>` ;
 }
 
-getData(printDatatoConsole);
+function writeToDocument(type) { 
+        var el = document.getElementById("data");
+        el.innerHTML = "";
+
+    getData(type, function(data) {
+        data = data.results;
+       var tableHeaders = getTableHeaders(data[0]);
+        
+        data.forEach(function(item){
+    
+            // el.innerHTML += "<p>"+ item.name + "</p>";
+        })
+        el.innerHTML = `<table>${tableHeaders}</table>`
+    });
+}
